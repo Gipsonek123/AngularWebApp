@@ -399,3 +399,10 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Angular build output
+dist/
+out-tsc/
+
+# Environment files with secrets
+.env
