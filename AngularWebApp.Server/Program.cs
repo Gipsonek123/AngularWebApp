@@ -1,5 +1,7 @@
 using AngularWebApp.Server.EntityFramework;
 using AngularWebApp.Server.Models;
+using AngularWebApp.Server.Services.Implementations;
+using AngularWebApp.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +11,8 @@ var connectionStringToDatabase = builder.Configuration.GetConnectionString("Conn
 
 builder.Services.AddDbContext<AngularWebAppDbContext>(options =>
     options.UseNpgsql(connectionStringToDatabase));
+
+builder.Services.AddScoped<IGenericDataService<User>, GenericDataService<User>>();
 // Add services to the container.
 
 builder.Services.AddControllers();
