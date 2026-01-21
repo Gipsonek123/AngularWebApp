@@ -21,6 +21,8 @@ export class Register {
   ) { }
 
   ngOnInit(): void {
+    // TODO: To other space ex. validators or helpers
+
     this.form = this.fb.group(
       {
         username: ['', [Validators.required, Validators.minLength(6)]],
@@ -56,6 +58,7 @@ export class Register {
     }
 
     this.auth.register(this.form.value).subscribe({
+      // TODO: to enum
       next: () => {
         this.router.navigate(['/login']);
       },

@@ -9,16 +9,20 @@ import { AuthService } from '../core/auth/auth-api';
   styleUrl: './home.css',
 })
 export class Home {
-  constructor(private auth: AuthService, private router: Router) { }
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+  ) {}
 
   logout() {
     this.auth.logout().subscribe({
       next: () => {
+        // TODO: to enum
         this.router.navigate(['/login']);
       },
       error: (err) => {
         console.error('Logout failed', err);
-      }
+      },
     });
   }
 }

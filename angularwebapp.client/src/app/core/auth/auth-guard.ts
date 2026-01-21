@@ -13,6 +13,7 @@ export class AuthGuard implements CanActivate {
     if (this.auth.isLoggedIn()) {
       return true; 
     } else {
+      // TODO: to enum
       this.router.navigate(['/login']);
       return false;
     }
