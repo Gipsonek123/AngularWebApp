@@ -17,8 +17,8 @@ export class Login {
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
-    private router: Router,
-  ) {}
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -40,8 +40,8 @@ export class Login {
         this.router.navigate(['/home']);
       },
       error: () => {
-        this.error = 'Invalid username or password';
-      },
+        this.error = "Invalid username or password";
+      }
     });
   }
 }
