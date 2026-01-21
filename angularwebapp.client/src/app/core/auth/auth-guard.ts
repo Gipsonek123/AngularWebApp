@@ -3,17 +3,15 @@ import { CanActivate, Router } from '@angular/router';
 import { AuthService } from './auth-api';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
-  constructor(
-    private auth: AuthService,
-    private router: Router,
-  ) {}
+
+  constructor(private auth: AuthService, private router: Router) { }
 
   canActivate(): boolean {
     if (this.auth.isLoggedIn()) {
-      return true;
+      return true; 
     } else {
       // TODO: to enum
       this.router.navigate(['/login']);

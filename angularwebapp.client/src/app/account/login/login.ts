@@ -36,7 +36,7 @@ export class Login {
 
     this.auth.login(this.form.value as any).subscribe({
       next: () => {
-        // TODO: to enum
+        // TODO: add to enum
         this.router.navigate(['/home']);
       },
       error: () => {
