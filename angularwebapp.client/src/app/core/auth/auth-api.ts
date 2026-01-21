@@ -13,7 +13,7 @@ export class AuthService {
 
   login(data: { username: string; password: string }) {
     return this.http.post(`${this.apiUrl}/login`, data, { withCredentials: true }).pipe(
-      tap(() => this.loggedIn.next(true)) // po udanym loginie ustawiamy stan
+      tap(() => this.loggedIn.next(true))
     );
   }
 
@@ -23,11 +23,10 @@ export class AuthService {
 
   logout() {
     return this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).pipe(
-      tap(() => this.loggedIn.next(false)) // po wylogowaniu ustawiamy stan na false
+      tap(() => this.loggedIn.next(false))
     );
   }
 
-  // prosta metoda do synchronicznego sprawdzenia
   isLoggedIn(): boolean {
     return this.loggedIn.value;
   }

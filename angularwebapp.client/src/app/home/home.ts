@@ -14,7 +14,7 @@ export class Home {
   logout() {
     this.auth.logout().subscribe({
       next: () => {
-        this.router.navigate(['/login']); // po wylogowaniu przekieruj do login
+        this.router.navigate(['/login']);
       },
       error: (err) => {
         console.error('Logout failed', err);
