@@ -27,7 +27,7 @@ export class Login {
     });
   }
 
-  submit() {
+  login() {
     this.submitted = true;
 
     if (this.form.invalid) {
@@ -36,7 +36,7 @@ export class Login {
 
     this.auth.login(this.form.value as any).subscribe({
       next: () => {
-        this.router.navigate(['/']);
+        this.router.navigate(['/home']);
       },
       error: () => {
         this.error = "Invalid username or password";

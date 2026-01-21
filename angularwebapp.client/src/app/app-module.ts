@@ -6,12 +6,14 @@ import { Login } from './account/login/login';
 import { Register } from './account/register/register';
 import { ReactiveFormsModule } from '@angular/forms';
 import { App } from './app';
+import { Home } from './home/home';
 
 @NgModule({
   declarations: [
     Login,
     Register,
-    App
+    App,
+    Home
   ],
   imports: [
     BrowserModule,

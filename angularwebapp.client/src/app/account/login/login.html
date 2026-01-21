@@ -2,10 +2,8 @@
 
   <h1 class="text-2xl font-semibold mb-6 text-center">Login</h1>
 
-  <!-- Formularz Reactive Forms -->
-  <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4">
+  <form [formGroup]="form" (ngSubmit)="login()" class="space-y-4">
 
-    <!-- Username -->
     <div>
       <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
       <input type="text"
@@ -19,7 +17,6 @@
       </span>
     </div>
 
-    <!-- Password -->
     <div>
       <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
       <input type="password"
@@ -33,21 +30,17 @@
       </span>
     </div>
 
-    <!-- Submit -->
     <div>
       <button type="submit"
               class="w-full bg-blue-600 text-white py-2 rounded-md font-medium
-               hover:bg-blue-700 transition"
-              [disabled]="form.invalid">
+               hover:bg-blue-700 transition">
         Login
       </button>
     </div>
 
-    <!-- Błąd logowania z backendu -->
     <p *ngIf="error" class="text-sm text-red-600 text-center">{{ error }}</p>
   </form>
 
-  <!-- Link do rejestracji -->
   <p class="mt-4 text-center text-sm text-gray-600">
     Don't have an account?
     <a routerLink="/register"

@@ -41,23 +41,14 @@ export class Register {
     );
   }
 
-  passwordsMatchValidator(form: AbstractControl) { 
-    const password = form.get('password')?.value;
-    const confirmPassword = form.get('confirmPassword')?.value;
-    const confirmControl = form.get('confirmPassword');
+  passwordsMatchValidator(control: AbstractControl) {
+    const password = control.get('password')?.value;
+    const confirmPassword = control.get('confirmPassword')?.value;
 
-    if (password !== confirmPassword) {
-      confirmControl?.setErrors({ mismatch: true });
-      return { mismatch: true };
-    } else {
-      if (confirmControl?.hasError('mismatch')) {
-        confirmControl.setErrors(null);
-      }
-      return null;
-    }
+    return password === confirmPassword ? null : { mismatch: true };
   }
 
-  submit() {
+  register() {
     this.submitted = true;
 
     if (this.form.invalid) {
