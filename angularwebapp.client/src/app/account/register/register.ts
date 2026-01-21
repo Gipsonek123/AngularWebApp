@@ -17,10 +17,12 @@ export class Register {
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
-    private router: Router
-  ) { }
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
+    // TODO: To other space ex. validators or helpers
+
     this.form = this.fb.group(
       {
         username: ['', [Validators.required, Validators.minLength(6)]],
@@ -30,14 +32,14 @@ export class Register {
           [
             Validators.required,
             Validators.minLength(6),
-            Validators.pattern(/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])/)
-          ]
+            Validators.pattern(/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])/),
+          ],
         ],
-        confirmPassword: ['', Validators.required]
+        confirmPassword: ['', Validators.required],
       },
       {
-        validators: this.passwordsMatchValidator
-      }
+        validators: this.passwordsMatchValidator,
+      },
     );
   }
 
@@ -56,13 +58,13 @@ export class Register {
     }
 
     this.auth.register(this.form.value).subscribe({
+      // TODO: to enum
       next: () => {
         this.router.navigate(['/login']);
       },
       error: (err) => {
-        this.error = err.error?.message || "Registration failed. Try again.";
-      }
+        this.error = err.error?.message || 'Registration failed. Try again.';
+      },
     });
   }
-
 }
