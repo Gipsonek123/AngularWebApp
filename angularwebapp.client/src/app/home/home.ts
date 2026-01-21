@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../core/auth/auth-api';
+import { AppRoutes } from '../core/enums/app-routes.enum';
 
 @Component({
   selector: 'app-home',
@@ -17,8 +18,7 @@ export class Home {
   logout() {
     this.auth.logout().subscribe({
       next: () => {
-        // TODO: to enum
-        this.router.navigate(['/login']);
+        this.router.navigate([`/${AppRoutes.Login}`]);
       },
       error: (err) => {
         console.error('Logout failed', err);

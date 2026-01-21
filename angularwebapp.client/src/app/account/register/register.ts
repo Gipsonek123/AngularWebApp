@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { AuthService } from '../../core/auth/auth-api';
 import { Router } from '@angular/router';
+import { AppRoutes } from '../../core/enums/app-routes.enum';
+import { CustomValidators } from '../../core/validators/custom-validators';
 
 @Component({
   selector: 'app-register',
@@ -21,24 +23,15 @@ export class Register {
   ) { }
 
   ngOnInit(): void {
-    // TODO: To other space ex. validators or helpers
-
     this.form = this.fb.group(
       {
-        username: ['', [Validators.required, Validators.minLength(6)]],
-        email: ['', [Validators.required, Validators.email]],
-        password: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(6),
-            Validators.pattern(/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])/)
-          ]
-        ],
+        username: ['', CustomValidators.usernameRules],
+        email: ['', CustomValidators.emailRules],
+        password: ['', CustomValidators.passwordRules],
         confirmPassword: ['', Validators.required]
       },
       {
-        validators: this.passwordsMatchValidator
+        validators: [CustomValidators.passwordsMatch]
       }
     );
   }
@@ -58,9 +51,8 @@ export class Register {
     }
 
     this.auth.register(this.form.value).subscribe({
-      // TODO: to enum
       next: () => {
-        this.router.navigate(['/login']);
+        this.router.navigate([`/${AppRoutes.Login}`]);
       },
       error: (err) => {
         this.error = err.error?.message || "Registration failed. Try again.";
