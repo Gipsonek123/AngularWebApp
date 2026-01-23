@@ -12,7 +12,7 @@ import { CustomValidators } from '../../core/validators/custom-validators';
   styleUrl: './register.css',
 })
 export class Register {
-  error = '';
+  errors: string[] = [];
   form!: FormGroup;
   submitted = false;
 
@@ -55,7 +55,7 @@ export class Register {
         this.router.navigate([`/${AppRoutes.Login}`]);
       },
       error: (err) => {
-        this.error = err.error?.message || "Registration failed. Try again.";
+        this.errors = err.error?.errors ?? ['Registration failed. Try again.'];
       }
     });
   }

@@ -1,5 +1,6 @@
 ﻿using AngularWebApp.Server.Constants;
-using AngularWebApp.Server.Dtos;
+using AngularWebApp.Server.Dtos.Requests;
+using AngularWebApp.Server.Dtos.Responses;
 using AngularWebApp.Server.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -35,7 +36,10 @@ namespace AngularWebApp.Server.Controllers
 
             if (!result.Succeeded)
             {
-                return BadRequest(result.Errors);
+                return BadRequest(new ApiErrorResponse
+                {
+                    Errors = result.Errors.Select(e => e.Description).ToList()
+                });
             }
 
             const string role = Roles.User;
