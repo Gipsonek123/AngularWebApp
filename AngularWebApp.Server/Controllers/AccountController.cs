@@ -1,4 +1,5 @@
-﻿using AngularWebApp.Server.Dtos;
+﻿using AngularWebApp.Server.Constants;
+using AngularWebApp.Server.Dtos;
 using AngularWebApp.Server.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -12,11 +13,13 @@ namespace AngularWebApp.Server.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly RoleManager<IdentityRole<int>> _roleManager;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole<int>> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
         }
 
         [HttpPost("register")]
@@ -34,6 +37,15 @@ namespace AngularWebApp.Server.Controllers
             {
                 return BadRequest(result.Errors);
             }
+
+            const string role = Roles.User;
+
+            if (!await _roleManager.RoleExistsAsync(role))
+            {
+                await _roleManager.CreateAsync(new IdentityRole<int>(role));
+            }
+
+            await _userManager.AddToRoleAsync(user, role);
 
             return Ok();
         }

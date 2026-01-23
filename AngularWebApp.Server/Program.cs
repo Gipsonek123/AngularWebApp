@@ -31,24 +31,6 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var db = services.GetRequiredService<AngularWebAppDbContext>();
-    await db.Database.MigrateAsync();
-
-    var roleManager = services.GetRequiredService<RoleManager<IdentityRole<int>>>();
-
-    string[] roles = new[] { "Admin", "User" };
-    foreach (var roleName in roles)
-    {
-        if (!await roleManager.RoleExistsAsync(roleName))
-        {
-            await roleManager.CreateAsync(new IdentityRole<int>(roleName));
-        }
-    }
-}
-
 app.UseDefaultFiles();
 app.MapStaticAssets();
 
