@@ -5,17 +5,17 @@ export class CustomValidators {
   static readonly PASSWORD_CONTROL = 'password';
   static readonly CONFIRM_PASSWORD_CONTROL = 'confirmPassword';
 
-  static readonly usernameRules = [
+  static readonly usernameRules: ValidatorFn[] = [
     Validators.required,
     Validators.minLength(4)
   ];
 
-  static readonly emailRules = [
+  static readonly emailRules: ValidatorFn[] = [
     Validators.required,
     Validators.email
   ];
 
-  static readonly passwordRules = [
+  static readonly passwordRules: ValidatorFn[] = [
     Validators.required,
     Validators.minLength(6),
     Validators.pattern(CustomValidators.PASSWORD_PATTERN)
