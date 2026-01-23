@@ -36,13 +36,6 @@ export class Register {
     );
   }
 
-  passwordsMatchValidator(control: AbstractControl) {
-    const password = control.get('password')?.value;
-    const confirmPassword = control.get('confirmPassword')?.value;
-
-    return password === confirmPassword ? null : { mismatch: true };
-  }
-
   register() {
     this.submitted = true;
 
