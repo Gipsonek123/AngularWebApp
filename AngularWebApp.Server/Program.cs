@@ -1,5 +1,6 @@
 using AngularWebApp.Server.EntityFramework;
 using AngularWebApp.Server.Models;
+using AngularWebApp.Server.Seeders;
 using AngularWebApp.Server.Services.Implementations;
 using AngularWebApp.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -30,6 +31,12 @@ builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+    await RoleSeeder.SeedAsync(roleManager);
+}
 
 app.UseDefaultFiles();
 app.MapStaticAssets();

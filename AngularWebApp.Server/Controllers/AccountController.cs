@@ -43,12 +43,6 @@ namespace AngularWebApp.Server.Controllers
             }
 
             const string role = Roles.User;
-
-            if (!await _roleManager.RoleExistsAsync(role))
-            {
-                await _roleManager.CreateAsync(new IdentityRole<int>(role));
-            }
-
             await _userManager.AddToRoleAsync(user, role);
 
             return Ok();
