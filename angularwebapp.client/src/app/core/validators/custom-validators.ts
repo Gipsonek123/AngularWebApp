@@ -5,7 +5,7 @@ export class CustomValidators {
 
   static readonly usernameRules = [
     Validators.required,
-    Validators.minLength(6)
+    Validators.minLength(4)
   ];
 
   static readonly emailRules = [
