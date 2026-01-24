@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AngularWebApp.Server.Dtos
+namespace AngularWebApp.Server.Dtos.Requests
 {
     public class RegisterDto
     {

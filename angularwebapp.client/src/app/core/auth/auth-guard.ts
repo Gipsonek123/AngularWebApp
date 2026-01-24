@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { AuthService } from './auth-api';
+import { AppRoutes } from '../enums/app-routes.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +14,7 @@ export class AuthGuard implements CanActivate {
     if (this.auth.isLoggedIn()) {
       return true; 
     } else {
-      // TODO: to enum
-      this.router.navigate(['/login']);
+      this.router.navigate([`/${AppRoutes.Home}`]);
       return false;
     }
   }

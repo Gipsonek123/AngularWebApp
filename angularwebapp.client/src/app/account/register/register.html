@@ -51,7 +51,9 @@
       </button>
     </div>
 
-    <p *ngIf="error" class="text-sm text-red-600 text-center">{{ error }}</p>
+    <div *ngIf="errors.length" class="text-sm text-red-600 text-center mt-2">
+      <div *ngFor="let e of errors">{{ e }}</div>
+    </div>
   </form>
 
   <p class="mt-4 text-center text-sm text-gray-600">

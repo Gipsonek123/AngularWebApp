@@ -1,5 +1,6 @@
 using AngularWebApp.Server.EntityFramework;
 using AngularWebApp.Server.Models;
+using AngularWebApp.Server.Seeders;
 using AngularWebApp.Server.Services.Implementations;
 using AngularWebApp.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -33,20 +34,8 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
-    var db = services.GetRequiredService<AngularWebAppDbContext>();
-    await db.Database.MigrateAsync();
-
-    var roleManager = services.GetRequiredService<RoleManager<IdentityRole<int>>>();
-
-    string[] roles = new[] { "Admin", "User" };
-    foreach (var roleName in roles)
-    {
-        if (!await roleManager.RoleExistsAsync(roleName))
-        {
-            await roleManager.CreateAsync(new IdentityRole<int>(roleName));
-        }
-    }
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+    await RoleSeeder.SeedAsync(roleManager);
 }
 
 app.UseDefaultFiles();
