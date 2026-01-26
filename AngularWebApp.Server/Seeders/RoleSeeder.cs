@@ -7,7 +7,7 @@ namespace AngularWebApp.Server.Seeders
     {
         public static async Task SeedAsync(RoleManager<IdentityRole<int>> roleManager)
         {
-            foreach (var role in Roles.AllRoles)
+            foreach (var role in UserRole.AllRoles)
             {
                 if (!await roleManager.RoleExistsAsync(role))
                 {

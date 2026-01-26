@@ -1,19 +1,14 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { AppRoutingModule } from './app-routing-module';
-import { Login } from './account/login/login';
-import { Register } from './account/register/register';
+import { AppRoutingModule } from '@app/app-routing-module';
 import { ReactiveFormsModule } from '@angular/forms';
-import { App } from './app';
-import { Home } from './home/home';
+import { App } from '@app/app';
+
 
 @NgModule({
   declarations: [
-    Login,
-    Register,
-    App,
-    Home
+    App
   ],
   imports: [
     BrowserModule,
