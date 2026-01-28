@@ -22,36 +22,36 @@ namespace AngularWebApp.Server.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterDto registerDto)
+        public async Task<IActionResult> Register(RegisterRequestDto registerRequestDto)
         {
             var user = new User
             {
-                UserName = registerDto.Username,
-                Email = registerDto.Email
+                UserName = registerRequestDto.UserName,
+                Email = registerRequestDto.Email
             };
 
-            var result = await _userManager.CreateAsync(user, registerDto.Password);
+            var result = await _userManager.CreateAsync(user, registerRequestDto.Password);
 
             if (!result.Succeeded)
             {
-                return BadRequest(new ApiErrorResponse
+                return BadRequest(new ApiErrorResponseDto
                 {
                     Errors = result.Errors.Select(e => e.Description).ToList()
                 });
             }
 
-            const string role = Roles.User;
+            const string role = UserRole.User;
             await _userManager.AddToRoleAsync(user, role);
 
             return Ok();
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginDto loginDto)
+        public async Task<IActionResult> Login(LoginRequestDto loginRequestDto)
         {
             var result = await _signInManager.PasswordSignInAsync(
-                loginDto.Username,
-                loginDto.Password,
+                loginRequestDto.UserName,
+                loginRequestDto.Password,
                 isPersistent: false,
                 lockoutOnFailure: false);
 
@@ -60,7 +60,19 @@ namespace AngularWebApp.Server.Controllers
                 return Unauthorized("Invalid username or password");
             }
 
-            return Ok();
+            var user = await _userManager.FindByNameAsync(loginRequestDto.UserName);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+            var role = roles.FirstOrDefault();
+
+            return Ok(new LoginResponseDto
+            {
+                Role = role
+            });
         }
 
         [HttpPost("logout")]

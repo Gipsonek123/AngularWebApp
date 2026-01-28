@@ -1,21 +1,42 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { Login } from './account/login/login';
-import { Register } from './account/register/register';
-import { Home } from './home/home';
-import { AuthGuard } from './core/auth/auth-guard';
-import { AppRoutes } from './core/enums/app-routes.enum';
+import { AppRoute } from '@core/enums/app-route.enum';
+import { AppPath } from './core/enums/app-path.enum';
 
-const routes: Routes = [
-  { path: AppRoutes.Login, component: Login },
-  { path: AppRoutes.Register, component: Register },
-  { path: AppRoutes.Home, component: Home, canActivate: [AuthGuard] },
-  { path: '', redirectTo: `/${AppRoutes.Login}`, pathMatch: 'full'},
-  { path: '**', redirectTo: `/${AppRoutes.Login}`}
-];
+//TODO Do something so that it stays on a given page when refreshing
+
+export const APP_ROUTES: Routes = [
+  {
+    path: AppRoute.Account,
+    loadChildren: () =>
+      import('@account/account.module')
+        .then(m => m.AccountModule)
+  },
+  {
+    path: AppRoute.Admin,
+    loadChildren: () =>
+      import('@admin/admin.module')
+        .then(m => m.AdminModule)
+  },
+  {
+    path: AppRoute.Home,
+    loadChildren: () =>
+      import('@home/home.module')
+        .then(m => m.HomeModule)
+  },
+  {
+    path: '',
+    redirectTo: AppPath.Login,
+    pathMatch: 'full'
+  },
+  {
+    path: '*',
+    redirectTo: AppPath.Login
+  }
+]
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(APP_ROUTES)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
