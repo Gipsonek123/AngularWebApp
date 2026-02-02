@@ -5,6 +5,7 @@ using AngularWebApp.Server.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AngularWebApp.Server.Controllers
 {
@@ -80,6 +81,21 @@ namespace AngularWebApp.Server.Controllers
         {
             await _signInManager.SignOutAsync();
             return Ok();
+        }
+
+        [HttpGet("me")]
+        public IActionResult Me()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userName = User.Identity?.Name;
+            var role = User.FindFirstValue(ClaimTypes.Role);
+
+            return Ok(new
+            {
+                Id = int.Parse(userId),
+                UserName = userName,
+                Role = role
+            });
         }
     }
 }

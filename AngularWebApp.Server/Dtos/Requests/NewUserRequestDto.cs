@@ -4,8 +4,6 @@ namespace AngularWebApp.Server.Dtos.Requests
 {
     public class NewUserRequestDto
     {
-        public int Id { get; set; }
-
         [Required(ErrorMessage = "Username is required")]
         [StringLength(20, MinimumLength = 4, ErrorMessage = "Min 4 or max 20 characters allowed")]
         public string UserName { get; set; }

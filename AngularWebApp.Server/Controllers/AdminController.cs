@@ -55,26 +55,41 @@ namespace AngularWebApp.Server.Controllers
         [HttpDelete("users/{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
+            var currentUserId = _userManager.GetUserId(User);
+
+            if (currentUserId == id)
+            {
+                return Forbid("You can't delete your own account!");
+            }
+
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
                 return NotFound();
             }
 
-            await _userManager.DeleteAsync(user);
+            var result = await _userManager.DeleteAsync(user);
+            if (!result.Succeeded)
+            {
+                return BadRequest(new ApiErrorResponseDto
+                {
+                    Errors = result.Errors.Select(e => e.Description).ToList()
+                });
+            }
+
             return NoContent();
         }
 
         [HttpPost("users")]
-        public async Task<IActionResult> CreateUser(RegisterRequestDto registerRequestDto)
+        public async Task<IActionResult> CreateUser(NewUserRequestDto newUserRequestDto)
         {
             var user = new User
             {
-                UserName = registerRequestDto.UserName,
-                Email = registerRequestDto.Email,
+                UserName = newUserRequestDto.UserName,
+                Email = newUserRequestDto.Email,
             };
 
-            var result = await _userManager.CreateAsync(user, registerRequestDto.Password);
+            var result = await _userManager.CreateAsync(user, newUserRequestDto.Password);
             if (!result.Succeeded)
             {
                 return BadRequest(new ApiErrorResponseDto
@@ -111,7 +126,7 @@ namespace AngularWebApp.Server.Controllers
         }
 
         [HttpPut("users/{id}")]
-        public async Task<IActionResult> UpdateUser(int id, NewUserRequestDto newUserRequestDto)
+        public async Task<IActionResult> UpdateUser(int id, UpdateUserRequestDto updateUserRequestDto)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user == null)
@@ -119,8 +134,8 @@ namespace AngularWebApp.Server.Controllers
                 return NotFound();
             }
 
-            var existingUserByUserName = _userManager.FindByNameAsync(newUserRequestDto.UserName);
-            if (existingUserByUserName != null && existingUserByUserName.Id != newUserRequestDto.Id)
+            var existingUserByUserName = await _userManager.FindByNameAsync(updateUserRequestDto.UserName);
+            if (existingUserByUserName != null && existingUserByUserName.Id != user.Id)
             {
                 return BadRequest(new ApiErrorResponseDto
                 {
@@ -128,8 +143,8 @@ namespace AngularWebApp.Server.Controllers
                 });
             }
 
-            var existingUserByEmail = _userManager.FindByEmailAsync(newUserRequestDto.Email);
-            if (existingUserByEmail != null && existingUserByEmail.Id != newUserRequestDto.Id)
+            var existingUserByEmail = await _userManager.FindByEmailAsync(updateUserRequestDto.Email);
+            if (existingUserByEmail != null && existingUserByEmail.Id != user.Id)
             {
                 return BadRequest(new ApiErrorResponseDto
                 {
@@ -137,13 +152,13 @@ namespace AngularWebApp.Server.Controllers
                 });
             }
 
-            await _userManager.SetUserNameAsync(user, newUserRequestDto.UserName);
-            await _userManager.SetEmailAsync(user, newUserRequestDto.Email);
+            await _userManager.SetUserNameAsync(user, updateUserRequestDto.UserName);
+            await _userManager.SetEmailAsync(user, updateUserRequestDto.Email);
 
-            if (!string.IsNullOrEmpty(newUserRequestDto.Password))
+            if (!string.IsNullOrEmpty(updateUserRequestDto.Password))
             {
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var result = await _userManager.ResetPasswordAsync(user, token, newUserRequestDto.Password);
+                var result = await _userManager.ResetPasswordAsync(user, token, updateUserRequestDto.Password);
                 if (!result.Succeeded)
                 {
                     return BadRequest(new ApiErrorResponseDto
@@ -156,7 +171,7 @@ namespace AngularWebApp.Server.Controllers
             var roles = await _userManager.GetRolesAsync(user);
             await _userManager.RemoveFromRolesAsync(user, roles);
 
-            var newRole = newUserRequestDto.Role;
+            var newRole = updateUserRequestDto.Role;
             await _userManager.AddToRoleAsync(user, newRole);
 
             await _userManager.UpdateAsync(user);

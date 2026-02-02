@@ -5,7 +5,6 @@ import { AppRoutingModule } from '@app/app-routing-module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { App } from '@app/app';
 
-
 @NgModule({
   declarations: [
     App

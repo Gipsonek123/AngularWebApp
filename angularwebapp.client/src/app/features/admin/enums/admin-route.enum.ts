@@ -1,3 +1,5 @@
 export enum AdminRoute {
-  AdminPanel = 'admin-panel'
+  AdminPanel = 'admin-panel',
+  EditUser = 'edit-user',
+  CreateUser = 'create-user'
 }

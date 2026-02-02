@@ -6,7 +6,7 @@ import { NewUser } from '@shared/models/new-user.model';
 import { ADMIN_ENDPOINTS } from '@admin/api/admin-endpoints';
 
 @Injectable({ providedIn: 'root' })
-export class AdminService {
+export class AdminApi {
 constructor(private http: HttpClient) { }
 
   getAllUsers(): Observable<User[]> {
@@ -16,7 +16,7 @@ constructor(private http: HttpClient) { }
   getUserById(id: number): Observable<User> {
     return this.http.get<User>(ADMIN_ENDPOINTS.users.getById(id));
   }
-
+  
   createUser(model: NewUser): Observable<void> {
     return this.http.post<void>(ADMIN_ENDPOINTS.users.create, model);
   }

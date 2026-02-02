@@ -7,5 +7,7 @@ export const AppPath = {
   Login: `${AppRoute.Account}/${AccountRoute.Login}`,
   Register: `${AppRoute.Account}/${AccountRoute.Register}`,
   AdminPanel: `${AppRoute.Admin}/${AdminRoute.AdminPanel}`,
-  Welcome: `${AppRoute.Home}/${HomeRoute.Welcome}`
+  Welcome: `${AppRoute.Home}/${HomeRoute.Welcome}`,
+  EditUser: `${AppRoute.Admin}/${AdminRoute.EditUser}`,
+  CreateUser: `${AppRoute.Admin}/${AdminRoute.CreateUser}`
 } as const;

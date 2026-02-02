@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AccountService } from '@account/services/account-api';
+import { AccountService } from '@account/services/account-service';
 import { AppPath } from '@core/enums/app-path.enum';
 
 @Component({
