@@ -1,34 +1,37 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
-import { AccountService } from '@account/services/account-service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AccountValidator } from '@core/validators/account-validator';
 import { AppPath } from '@core/enums/app-path.enum';
+import { UserRole } from '@core/enums/user-role.enum';
 import { SuccessMessages } from '@core/constants/success-messages';
+import { AdminService } from '@admin/services/admin-service';
 
 @Component({
-  selector: 'app-register',
+  selector: 'app-create-user',
   standalone: false,
-  templateUrl: './register.html',
-  styleUrl: './register.css',
+  templateUrl: './create-user.html',
+  styleUrl: './create-user.css',
 })
-export class Register {
-  errors: string[] = [];
+export class CreateUser {
   form!: FormGroup;
+  errors: string[] = [];
   submitted = false;
-  successMessage = SuccessMessages.accountCreated;
+  roles = Object.values(UserRole);
+  successMessage = SuccessMessages.userCreated;
 
   constructor(
     private fb: FormBuilder,
-    private accountService: AccountService,
+    private adminService: AdminService,
     private router: Router
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.form = this.fb.group(
       {
-        username: ['', AccountValidator.usernameRules],
+        userName: ['', AccountValidator.usernameRules],
         email: ['', AccountValidator.emailRules],
+        role: ['', Validators.required],
         password: ['', AccountValidator.passwordRules],
         confirmPassword: ['', Validators.required]
       },
@@ -38,22 +41,21 @@ export class Register {
     );
   }
 
-  register() {
+  submit() {
     this.submitted = true;
 
     if (this.form.invalid) {
       return;
     }
 
-    this.accountService.register(this.form.value).subscribe({
+    this.adminService.createUser(this.form.value).subscribe({
       next: () => {
         alert(this.successMessage);
-        this.router.navigate([AppPath.Login]);
+        this.router.navigate([AppPath.AdminPanel]);
       },
       error: (err) => {
         this.errors = err.error?.errors ?? ['Registration failed. Try again.'];
       }
     });
   }
-
 }

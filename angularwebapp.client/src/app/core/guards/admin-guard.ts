@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-import { AccountService } from '@account/services/account-api';
+import { AccountService } from '@account/services/account-service';
 import { UserRole } from '@shared/enums/user-role.enum';
 import { AppPath } from '@core/enums/app-path.enum';
 
