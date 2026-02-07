@@ -33,15 +33,16 @@ export class CreateUser {
         email: ['', AccountValidator.emailRules],
         role: ['', Validators.required],
         password: ['', AccountValidator.passwordRules],
-        confirmPassword: ['', Validators.required]
-      },
-      {
-        validators: [AccountValidator.passwordsMatch]
+        confirmPassword: ['', [Validators.required, AccountValidator.passwordsMatch]]
       }
     );
+
+    this.form.get('password')?.valueChanges.subscribe(() => {
+      this.form.get('confirmPassword')?.updateValueAndValidity();
+    });
   }
 
-  submit() {
+  createUser() {
     this.submitted = true;
 
     if (this.form.invalid) {

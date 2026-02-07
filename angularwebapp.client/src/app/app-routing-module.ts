@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AppRoute } from '@core/enums/app-route.enum';
-import { AppPath } from './core/enums/app-path.enum';
+import { AppPath } from '@core/enums/app-path.enum';
 
 //TODO Do something so that it stays on a given page when refreshing
 

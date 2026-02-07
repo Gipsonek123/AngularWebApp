@@ -1,0 +1,103 @@
+<div class="form-container">
+
+  <h1 class="form-title">
+    {{ title }}
+  </h1>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <app-auth-input label="Username"
+                    [control]="userName"
+                    [submitted]="submitted"
+                    [errors]="[usernameError]">
+
+      <input type="text"
+             [formControl]="userName"
+             placeholder="Enter your username"
+             class="input" />
+
+    </app-auth-input>
+
+    <app-auth-input *ngIf="showEmail"
+                    label="Email"
+                    [control]="email"
+                    [submitted]="submitted"
+                    [errors]="['Enter a valid email']">
+
+      <input type="email"
+             [formControl]="email"
+             placeholder="Enter your email"
+             class="input" />
+
+    </app-auth-input>
+
+    <app-auth-input *ngIf="showRole"
+                    label="Role"
+                    [control]="role"
+                    [submitted]="submitted"
+                    [errors]="['Role is required']">
+
+      <select formControlName="role"
+              class="input">
+
+        <option value="" disabled>Select role</option>
+        <option *ngFor="let r of roles" [value]="r">
+          {{ r }}
+        </option>
+
+      </select>
+    </app-auth-input>
+
+    <app-auth-input label="Password"
+                    [control]="password"
+                    [submitted]="submitted"
+                    [errors]="[passwordError]"
+                    [showHint]="showPasswordHint"
+                    [hintText]="passwordHintText">
+
+      <input type="password"
+             [formControl]="password"
+             placeholder="Enter your password"
+             class="input" />
+
+    </app-auth-input>
+
+    <app-auth-input *ngIf="showConfirmPassword"
+                    label="Confirm Password"
+                    [control]="confirmPassword"
+                    [submitted]="submitted"
+                    [errors]="['Passwords do not match']"
+                    [showHint]="showPasswordHint"
+                    [hintText]="passwordHintText">
+
+      <input type="password"
+             [formControl]="confirmPassword"
+             placeholder="Confirm your password"
+             class="input" />
+
+    </app-auth-input>
+
+    <button type="submit"
+            class="btn-primary">
+      {{ submitText }}
+    </button>
+
+    <p *ngIf="backendErrors?.length" class="error mt-4">
+      <span *ngFor="let err of backendErrors" class="block">{{ err }}</span>
+    </p>
+
+    <p class="p-text">
+
+      <ng-container *ngIf="footerText">
+        {{ footerText }}
+      </ng-container>
+
+      <a *ngIf="footerLink"
+         [routerLink]="footerLink"
+         class="link-text">
+        {{ footerLinkText }}
+      </a>
+
+    </p>
+  </form>
+</div>

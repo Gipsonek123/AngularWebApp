@@ -22,7 +22,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
 {
-    options.Password.RequireDigit = true;
+    options.User.RequireUniqueEmail = true;
 })
     .AddEntityFrameworkStores<AngularWebAppDbContext>()
     .AddDefaultTokenProviders();

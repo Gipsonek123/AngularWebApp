@@ -27,15 +27,16 @@ export class Register {
   ngOnInit(): void {
     this.form = this.fb.group(
       {
-        username: ['', AccountValidator.usernameRules],
+        userName: ['', AccountValidator.usernameRules],
         email: ['', AccountValidator.emailRules],
         password: ['', AccountValidator.passwordRules],
-        confirmPassword: ['', Validators.required]
-      },
-      {
-        validators: [AccountValidator.passwordsMatch]
+        confirmPassword: ['', [Validators.required, AccountValidator.passwordsMatch]]
       }
     );
+
+    this.form.get('password')?.valueChanges.subscribe(() => {
+      this.form.get('confirmPassword')?.updateValueAndValidity();
+    });
   }
 
   register() {

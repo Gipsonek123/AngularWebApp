@@ -139,7 +139,7 @@ namespace AngularWebApp.Server.Controllers
             {
                 return BadRequest(new ApiErrorResponseDto
                 {
-                    Errors = { "Username is already taken." }
+                    Errors = { $"Username '{existingUserByUserName.UserName}' is already taken." }
                 });
             }
 
@@ -148,7 +148,7 @@ namespace AngularWebApp.Server.Controllers
             {
                 return BadRequest(new ApiErrorResponseDto
                 {
-                    Errors = { "Email already used." }
+                    Errors = { $"Email '{existingUserByEmail.Email}' already used." }
                 });
             }
 
