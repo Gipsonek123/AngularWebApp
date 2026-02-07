@@ -31,7 +31,6 @@ export class AdminService {
   }
 
   isSelfDowngradeToUser(selectedRole: UserRole, currentUserId: number, editedUserId: number): boolean {
-    return (selectedRole === UserRole.User && currentUserId === editedUserId
-    );
+    return (selectedRole === UserRole.User && currentUserId === editedUserId);
   }
 }

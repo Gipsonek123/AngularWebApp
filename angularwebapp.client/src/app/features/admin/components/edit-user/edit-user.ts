@@ -45,17 +45,20 @@ export class EditUser {
       userName: ['', AccountValidator.usernameRules],
       email: ['', AccountValidator.emailRules],
       role: ['', Validators.required],
-      password: [''],
-      confirmPassword: ['']
-    },
-      { validators: [AccountValidator.passwordsMatch, AccountValidator.passwordRulesEditUser]});
+      password: ['', AccountValidator.passwordRulesEditUser],
+      confirmPassword: ['', AccountValidator.passwordsMatch]
+    });
 
     this.adminService.getUserById(this.editedUserId).subscribe(user => {
       this.form.patchValue(user);
     });
+
+    this.form.get('password')?.valueChanges.subscribe(() => {
+      this.form.get('confirmPassword')?.updateValueAndValidity();
+    });
   }
 
-  submit() {
+  editUser() {
     this.submitted = true;
 
     if (this.form.invalid) {

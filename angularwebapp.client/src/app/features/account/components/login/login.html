@@ -1,55 +1,14 @@
-<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center">
+<app-user-form
+        class="page-content"
+        [form]="form"
+        [submitted]="submitted"
+        title="Login"
+        submitText="Login"
+        usernameError="Username is required"
+        passwordError="Password is required"
+        footerText="Don't have an account?"
+        footerLinkText="Register"
+        footerLink="/account/register/"
+        [backendErrors]="[error]"
+        (submitForm)="login()" />
 
-  <div class="w-full max-w-md bg-gray-800 p-8 rounded-xl shadow-lg">
-
-    <h1 class="text-3xl font-extrabold mb-6 text-center">Login</h1>
-
-    <form [formGroup]="form" (ngSubmit)="login()" class="space-y-5">
-
-      <div>
-        <label class="block text-sm font-medium text-gray-300 mb-1">Username</label>
-        <input type="text"
-               formControlName="username"
-               placeholder="Username"
-               class="w-full rounded-md border border-gray-700 bg-gray-900 px-3 py-2
-                 text-white focus:outline-none focus:ring-2 focus:ring-purple-500" />
-        <span *ngIf="form.get('username')?.invalid && submitted"
-              class="text-sm text-red-500">
-          Username is required
-        </span>
-      </div>
-
-      <div>
-        <label class="block text-sm font-medium text-gray-300 mb-1">Password</label>
-        <input type="password"
-               formControlName="password"
-               placeholder="Password"
-               class="w-full rounded-md border border-gray-700 bg-gray-900 px-3 py-2
-                 text-white focus:outline-none focus:ring-2 focus:ring-purple-500" />
-        <span *ngIf="form.get('password')?.invalid && submitted"
-              class="text-sm text-red-500">
-          Password is required
-        </span>
-      </div>
-
-      <div>
-        <button type="submit"
-                class="w-full bg-purple-600 hover:bg-purple-500 text-white py-2 rounded-full font-semibold
-                       shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:scale-105">
-          Login
-        </button>
-      </div>
-
-      <p *ngIf="error" class="text-sm text-red-500 text-center">{{ error }}</p>
-    </form>
-
-    <p class="mt-4 text-center text-sm text-gray-400">
-      Don't have an account?
-      <a routerLink="/account/register"
-         class="text-purple-400 hover:text-purple-200 font-medium transition">
-        Register
-      </a>
-    </p>
-
-  </div>
-</body>

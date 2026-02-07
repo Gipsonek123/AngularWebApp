@@ -1,0 +1,14 @@
+<div class="field-wrapper">
+  <label class="label">{{ label }}</label>
+
+  <ng-content></ng-content>
+
+  <span *ngIf="showHint && hintText"
+        class="text-sm text-gray-400 block mt-1">
+    {{ hintText }}
+  </span>
+
+  <div *ngIf="control.invalid && submitted" class="error">
+    <span *ngFor="let err of errors">{{ err }}</span>
+  </div>
+</div>
