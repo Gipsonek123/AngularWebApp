@@ -28,17 +28,27 @@ export class AccountValidator {
   }
 
   static passwordsMatch: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const { password, confirmPassword } = this.getPasswordValues(control);
+    const parent = control.parent;
+    if (!parent) {
+      return null;
+    }
+
+    const { password, confirmPassword } = this.getPasswordValues(parent);
 
     if (password.length > 0 || confirmPassword.length > 0) {
       return password === confirmPassword ? null : { passwordsMismatch: true };
     }
 
     return null;
-  }
+  };
 
   static passwordRulesEditUser: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const { password, confirmPassword } = this.getPasswordValues(control);
+    const parent = control.parent;
+    if (!parent) {
+      return null;
+    }
+
+    const { password, confirmPassword } = this.getPasswordValues(parent);
 
     if (password.length === 0) {
       return null;

@@ -33,15 +33,16 @@ export class CreateUser {
         email: ['', AccountValidator.emailRules],
         role: ['', Validators.required],
         password: ['', AccountValidator.passwordRules],
-        confirmPassword: ['', Validators.required]
-      },
-      {
-        validators: [AccountValidator.passwordsMatch]
+        confirmPassword: ['', [Validators.required, AccountValidator.passwordsMatch]]
       }
     );
+
+    this.form.get('password')?.valueChanges.subscribe(() => {
+      this.form.get('confirmPassword')?.updateValueAndValidity();
+    });
   }
 
-  submit() {
+  createUser() {
     this.submitted = true;
 
     if (this.form.invalid) {
@@ -54,7 +55,7 @@ export class CreateUser {
         this.router.navigate([AppPath.AdminPanel]);
       },
       error: (err) => {
-        this.errors = err.error?.errors ?? ['Registration failed. Try again.'];
+        this.errors = err.error?.errors ?? ['User creation failed. Please try again.'];
       }
     });
   }

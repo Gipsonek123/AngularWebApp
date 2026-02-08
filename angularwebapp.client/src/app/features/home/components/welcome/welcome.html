@@ -1,12 +1,28 @@
-<header class="bg-blue-600 text-white flex justify-between items-center p-4 shadow-md">
-  <h1 class="text-xl font-semibold">Dofus</h1>
+<header class="bg-gradient-to-r from-indigo-900 via-purple-900 to-indigo-800 text-white flex justify-between items-center p-6 shadow-xl">
 
-  <button class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded font-medium"
-          (click)="logout()">
-    Logout
-  </button>
+  <div class="flex items-center gap-4">
+    <img src="/assets/dofus-logo.png"
+         alt="Logo"
+         class="h-16 w-auto rounded-full shadow-lg" />
+    <h1 class="text-3xl font-extrabold tracking-wide">Dofus</h1>
+  </div>
+
+  <div class="flex items-center gap-4">
+    <button class="bg-purple-600 hover:bg-purple-500 text-white font-semibold px-5 py-2 rounded-full shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:scale-105">
+      Download Bot
+    </button>
+
+    <button (click)="logout()"
+            class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full font-medium shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:scale-105">
+      Logout
+    </button>
+  </div>
+
 </header>
 
-<main class="p-6">
-  <p>Welcome in our app</p>
+<main class="p-8 bg-gray-900 min-h-screen">
+  <div class="max-w-3xl mx-auto bg-gray-800 rounded-xl shadow-lg p-8 text-white">
+    <h2 class="text-2xl font-bold mb-4">Welcome to our app</h2>
+    <p class="text-gray-300 leading-relaxed">Explore features, check updates, and manage your account seamlessly. This is your modern dark dashboard experience.</p>
+  </div>
 </main>
