@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AccountValidator } from '@core/validators/account-validator';
 import { AppPath } from '@core/enums/app-path.enum';
-import { UserRole } from '@core/enums/user-role.enum';
+import { UserRole } from '@shared/enums/user-role.enum';
 import { SuccessMessages } from '@core/constants/success-messages';
 import { AdminService } from '@admin/services/admin-service';
 

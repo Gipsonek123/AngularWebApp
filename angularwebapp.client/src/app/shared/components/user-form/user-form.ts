@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { UserRole } from '@core/enums/user-role.enum';
+import { UserRole } from '@shared/enums/user-role.enum';
 
 @Component({
   selector: 'app-user-form',

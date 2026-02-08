@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { AdminApi } from '@admin/api/admin-api';
 import { User } from '@shared/models/user.model';
 import { NewUser } from '@shared/models/new-user.model';
-import { UserRole } from '@core/enums/user-role.enum';
+import { UserRole } from '@shared/enums/user-role.enum';
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
