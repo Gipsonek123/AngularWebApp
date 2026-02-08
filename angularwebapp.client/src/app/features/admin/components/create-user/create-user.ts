@@ -55,7 +55,7 @@ export class CreateUser {
         this.router.navigate([AppPath.AdminPanel]);
       },
       error: (err) => {
-        this.errors = err.error?.errors ?? ['Registration failed. Try again.'];
+        this.errors = err.error?.errors ?? ['User creation failed. Please try again.'];
       }
     });
   }

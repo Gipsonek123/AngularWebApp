@@ -52,7 +52,7 @@ export class Register {
         this.router.navigate([AppPath.Login]);
       },
       error: (err) => {
-        this.errors = err.error?.errors ?? ['Registration failed. Try again.'];
+        this.errors = err.error?.errors ?? ['Registration failed. Please try again.'];
       }
     });
   }

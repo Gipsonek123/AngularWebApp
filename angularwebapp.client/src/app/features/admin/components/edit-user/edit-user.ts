@@ -86,13 +86,7 @@ export class EditUser {
         }
       },
       error: (err) => {
-        if (err.error?.errors) {
-          this.errors = err.error.errors;
-        } else if (typeof err.error === 'string') {
-          this.errors = [err.error];
-        } else {
-          this.errors = ['Unexpected error occurred'];
-        }
+        this.errors = err.error?.errors ?? ['User editing failed. Please try again.'];
       }
     });
   }
