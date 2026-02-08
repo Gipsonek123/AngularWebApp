@@ -22,13 +22,6 @@ export class AccountService {
       .catch(() => void 0);
   }
 
-  //loadCurrentUser(): Observable<UserResponse> {
-  //  return this.accountApi.currentUser()
-  //    .pipe(
-  //      tap(user => this.currentUser$.next(user))
-  //    );
-  //}
-
   getCurrentUser(): Observable<UserResponse | null> {
     return this.currentUser$.asObservable();
   }
