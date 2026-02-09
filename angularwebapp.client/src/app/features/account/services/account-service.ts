@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, Observable, switchMap, tap, firstValueFrom } from 'rxjs';
 import { AccountApi } from '@account/api/account-api';
 import { LoginRequest } from '@account/models/requests/login-request.model';
 import { RegisterRequest } from '@account/models/requests/register-request.model';
 import { UserResponse } from '@account/models/responses/user-response.model';
+import { UserRole } from '@shared/enums/user-role.enum';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
@@ -12,11 +13,13 @@ export class AccountService {
 
   constructor(private accountApi: AccountApi) { }
 
-  loadCurrentUser(): Observable<UserResponse> {
-    return this.accountApi.currentUser()
-      .pipe(
+  init(): Promise<void> {
+    return firstValueFrom(
+      this.accountApi.currentUser().pipe(
         tap(user => this.currentUser$.next(user))
-      );
+      )
+    ).then(() => void 0)
+      .catch(() => void 0);
   }
 
   getCurrentUser(): Observable<UserResponse | null> {
@@ -27,7 +30,7 @@ export class AccountService {
     return this.currentUser$.value?.id ?? null;
   }
 
-  getRole(): string | null {
+  getRole(): UserRole | null {
     return this.currentUser$.value?.role ?? null;
   }
 
@@ -36,9 +39,9 @@ export class AccountService {
   }
 
   login(data: LoginRequest): Observable<UserResponse> {
-    return this.accountApi.login(data)
-      .pipe(
-        switchMap(() => this.loadCurrentUser())
+    return this.accountApi.login(data).pipe(
+      switchMap(() => this.accountApi.currentUser()),
+      tap(user => this.currentUser$.next(user))
       );
   }
 

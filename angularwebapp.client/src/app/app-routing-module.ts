@@ -3,8 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { AppRoute } from '@core/enums/app-route.enum';
 import { AppPath } from '@core/enums/app-path.enum';
 
-//TODO Do something so that it stays on a given page when refreshing
-
 export const APP_ROUTES: Routes = [
   {
     path: AppRoute.Account,
@@ -30,7 +28,7 @@ export const APP_ROUTES: Routes = [
     pathMatch: 'full'
   },
   {
-    path: '*',
+    path: '**',
     redirectTo: AppPath.Login
   }
 ]
