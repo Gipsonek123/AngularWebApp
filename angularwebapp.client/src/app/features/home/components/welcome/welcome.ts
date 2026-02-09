@@ -21,7 +21,8 @@ export class Welcome {
         this.router.navigate([AppPath.Login]);
       },
       error: (err) => {
-        console.error('Logout failed', err);
+        alert(`Logout failed: ${err.message}`);
+        return
       },
     });
   }
