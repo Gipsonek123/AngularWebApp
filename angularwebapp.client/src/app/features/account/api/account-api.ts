@@ -41,4 +41,11 @@ export class AccountApi {
     );
   }
 
+  confirmEmail(userId: number, token: string) {
+    return this.http.get(
+      ACCOUNT_ENDPOINTS.confirmEmail,
+      { params: { userId, token } }
+    );
+  }
+
 }

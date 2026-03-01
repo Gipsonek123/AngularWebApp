@@ -55,4 +55,8 @@ export class AccountService {
   register(data: RegisterRequest): Observable<void> {
     return this.accountApi.register(data);
   }
+
+  confirmEmail(userId: number, token: string) {
+    return this.accountApi.confirmEmail(userId, token);
+  }
 }

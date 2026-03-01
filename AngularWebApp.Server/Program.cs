@@ -4,6 +4,7 @@ using AngularWebApp.Server.Seeders;
 using AngularWebApp.Server.Services.Implementations;
 using AngularWebApp.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,8 @@ var connectionStringToDatabase = builder.Configuration.GetConnectionString("Conn
 
 builder.Services.AddDbContext<AngularWebAppDbContext>(options =>
     options.UseNpgsql(connectionStringToDatabase));
+
+builder.Services.AddScoped<IEmailSender, SmtpEmailService>();
 
 builder.Services.AddScoped<IGenericDataService<User>, GenericDataService<User>>();
 // Add services to the container.
@@ -22,6 +25,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
 {
+    //options.SignIn.RequireConfirmedEmail = true;
     options.User.RequireUniqueEmail = true;
 })
     .AddEntityFrameworkStores<AngularWebAppDbContext>()

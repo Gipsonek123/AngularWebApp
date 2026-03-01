@@ -1,0 +1,8 @@
+<div *ngIf="success">
+  <h2>Email został potwierdzony 🎉</h2>
+  <a routerLink="/login">Przejdź do logowania</a>
+</div>
+
+<div *ngIf="error">
+  <h2>Link jest nieprawidłowy lub wygasł ❌</h2>
+</div>

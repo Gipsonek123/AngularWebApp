@@ -2,8 +2,10 @@
 using AngularWebApp.Server.Dtos.Requests;
 using AngularWebApp.Server.Dtos.Responses;
 using AngularWebApp.Server.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -15,11 +17,13 @@ namespace AngularWebApp.Server.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly IEmailSender _emailSender;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailSender = emailSender;
         }
 
         [HttpPost("register")]
@@ -41,8 +45,40 @@ namespace AngularWebApp.Server.Controllers
                 });
             }
 
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            var encodedToken = Uri.EscapeDataString(token);
+
+            // To change
+            var confirmationLink =
+            $"https://localhost:65488/account/confirm-email?userId={user.Id}&token={encodedToken}";
+
+            await _emailSender.SendEmailAsync(
+                user.Email,
+                "Confirm email",
+                $"Click on the link: <a href='{confirmationLink}'>Confirm</a>");
+
             const string role = UserRole.User;
             await _userManager.AddToRoleAsync(user, role);
+
+            return Ok();
+        }
+
+        [HttpGet("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail(int userId, string token)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user == null)
+            {
+                return BadRequest("Nieprawidłowy użytkownik");
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+
+            if (!result.Succeeded)
+            {
+                return BadRequest("Nied udało się potwierdzić emaila");
+            }
 
             return Ok();
         }
@@ -50,6 +86,18 @@ namespace AngularWebApp.Server.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginRequestDto loginRequestDto)
         {
+            var user = await _userManager.FindByNameAsync(loginRequestDto.UserName);
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            if (!user.EmailConfirmed)
+            {
+                return BadRequest("Email not confirmed. Please check your inbox.");
+            }
+
             var result = await _signInManager.PasswordSignInAsync(
                 loginRequestDto.UserName,
                 loginRequestDto.Password,
@@ -59,12 +107,6 @@ namespace AngularWebApp.Server.Controllers
             if (!result.Succeeded)
             {
                 return Unauthorized("Invalid username or password");
-            }
-
-            var user = await _userManager.FindByNameAsync(loginRequestDto.UserName);
-            if (user == null)
-            {
-                return Unauthorized();
             }
 
             var roles = await _userManager.GetRolesAsync(user);
@@ -83,6 +125,7 @@ namespace AngularWebApp.Server.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpGet("me")]
         public IActionResult Me()
         {
