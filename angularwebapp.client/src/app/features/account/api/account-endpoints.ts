@@ -3,4 +3,5 @@ export const ACCOUNT_ENDPOINTS = {
   register: '/api/account/register',
   logout: '/api/account/logout',
   currentUser: '/api/account/me',
+  confirmEmail: '/api/account/confirm-email',
 } as const;
