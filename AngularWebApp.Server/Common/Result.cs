@@ -3,38 +3,32 @@
     public class Result<T>
     {
         public bool IsSuccess { get; }
-        public string Error { get; }
+        public List<string> Errors { get; }
         public T Value { get; }
 
-        private Result(bool isSuccess, T value, string error)
+        protected Result(bool isSuccess, T value, List<string> errors)
         {
             IsSuccess = isSuccess;
             Value = value;
-            Error = error;
+            Errors = errors;
         }
 
         public static Result<T> Success(T value)
-            => new Result<T>(true, value, null);
+            => new Result<T>(true, value, new List<string>());
 
-        public static Result<T> Failure(string error)
-            => new Result<T>(false, default, error);
+        public static Result<T> Failure(params string[] errors)
+            => new Result<T>(false, default, errors.ToList());
     }
 
-    public class Result
+    public class Result : Result<object>
     {
-        public bool IsSuccess { get; }
-        public string Error { get; }
-
-        private Result(bool isSuccess, string error)
-        {
-            IsSuccess = isSuccess;
-            Error = error;
-        }
+        private Result(bool isSuccess, List<string> errors)
+            : base(isSuccess, null, errors) { }
 
         public static Result Success()
-            => new Result(true, null);
+            => new Result(true, new List<string>());
 
-        public static Result Failure(string error)
-            => new Result(false, error);
+        public static Result Failure(params string[] errors)
+            => new Result(false, errors.ToList());
     }
 }

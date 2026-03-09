@@ -18,6 +18,7 @@ namespace AngularWebApp.Server.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAuthService _authService;
+
         public AccountController(IAuthService authService)
         {
             _authService = authService;
@@ -27,7 +28,15 @@ namespace AngularWebApp.Server.Controllers
         public async Task<IActionResult> Register(RegisterRequestDto registerRequestDto)
         {
             var result = await _authService.RegisterAsync(registerRequestDto);
-            if (!result.IsSuccess) return BadRequest(result.Error);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(new ApiErrorResponseDto
+                {
+                    Errors = result.Errors
+                });
+            }
+
             return Ok();
         }
 
@@ -35,7 +44,15 @@ namespace AngularWebApp.Server.Controllers
         public async Task<IActionResult> ConfirmEmail(int userId, string token)
         {
             var result = await _authService.ConfirmEmailAsync(userId, token);
-            if (!result.IsSuccess) return BadRequest(result.Error);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(new ApiErrorResponseDto
+                {
+                    Errors = result.Errors
+                });
+            }
+
             return Ok();
         }
 
@@ -46,7 +63,10 @@ namespace AngularWebApp.Server.Controllers
 
             if (!result.IsSuccess)
             {
-                return Unauthorized(result.Error);
+                return Unauthorized(new ApiErrorResponseDto
+                {
+                    Errors = result.Errors
+                });
             }
 
             return Ok(result.Value);
@@ -56,7 +76,15 @@ namespace AngularWebApp.Server.Controllers
         public async Task<IActionResult> Logout()
         {
             var result = await _authService.LogoutAsync();
-            if (!result.IsSuccess) return BadRequest(result.Error);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(new ApiErrorResponseDto
+                {
+                    Errors = result.Errors
+                });
+            }
+
             return Ok();
         }
 

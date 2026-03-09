@@ -70,7 +70,7 @@ namespace AngularWebApp.Server.Services.Implementations
 
             if (!result.Succeeded)
             {
-                return Result.Failure(string.Join(", ", result.Errors.Select(e => e.Description)));
+                return Result.Failure(result.Errors.Select(e => e.Description).ToArray());
             }
 
             const string role = UserRole.User;
