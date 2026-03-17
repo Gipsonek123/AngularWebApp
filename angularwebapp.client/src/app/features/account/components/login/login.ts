@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AccountService } from '@account/services/account-service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserRole } from '@shared/enums/user-role.enum';
 import { AppPath } from '@core/enums/app-path.enum';
 
@@ -12,14 +12,15 @@ import { AppPath } from '@core/enums/app-path.enum';
   styleUrl: './login.css',
 })
 export class Login {
-  error = '';
+  errors: string[] = [];
   form!: FormGroup;
   submitted = false;
 
   constructor(
     private fb: FormBuilder,
     private accountService: AccountService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute 
   ) { }
 
   ngOnInit(): void {
@@ -27,6 +28,11 @@ export class Login {
       userName: ['', Validators.required],
       password: ['', Validators.required],
     });
+
+    const confirmed = this.route.snapshot.queryParamMap.get('confirmed');
+    if (confirmed === 'true') {
+      alert("Your email has been confirmed. You can log in.");
+    }
   }
 
   login() {
@@ -44,8 +50,12 @@ export class Login {
           this.router.navigate([AppPath.Welcome]);
         }
       },
-      error: () => {
-        this.error = 'Invalid username or password';
+      error: (err) => {
+        if (typeof err.error === 'string') {
+          this.errors = [err.error];
+        } else {
+          this.errors = err.error?.errors ?? ['Login failed. Please try again.'];
+        }
       }
     });
   }

@@ -5,10 +5,11 @@ import { RouterModule } from '@angular/router';
 import { Login } from '@account/components/login/login';
 import { Register } from '@account/components/register/register';
 import { ACCOUNT_ROUTES } from '@account/account-routes';
+import { ConfirmEmail } from '@account/components/confirm-email/confirm-email';
 import { SharedModule } from '@shared/shared-module'
 
 @NgModule({
-  declarations: [Login, Register],
+  declarations: [Login, Register, ConfirmEmail],
   imports: [
     CommonModule,
     ReactiveFormsModule,

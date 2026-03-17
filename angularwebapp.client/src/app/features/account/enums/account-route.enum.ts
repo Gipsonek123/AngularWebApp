@@ -1,4 +1,5 @@
 export enum AccountRoute {
   Login = 'login',
-  Register = 'register'
+  Register = 'register',
+  ConfirmEmail = 'confirm-email'
 }
