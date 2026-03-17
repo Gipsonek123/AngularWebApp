@@ -2,6 +2,7 @@
 using AngularWebApp.Server.Dtos.Requests;
 using AngularWebApp.Server.Dtos.Responses;
 using AngularWebApp.Server.Models;
+using AngularWebApp.Server.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -17,89 +18,48 @@ namespace AngularWebApp.Server.Controllers
     [ApiController]
     public class AdminController : ControllerBase
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
+        private readonly IAdminService _adminService;
 
-        public AdminController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AdminController(IAdminService adminService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
+            _adminService = adminService;
         }
 
         [HttpGet("users")]
         public async Task<IActionResult> GetAllUsers()
         {
-            var users = await _userManager.Users
-                .Where(u => u.UserName.ToLower() != "admin")
-                .ToListAsync();
+            var result = await _adminService.GetAllUsersAsync();
 
-            var usersList = new List<UserResponseDto>();
-
-            foreach (var user in users)
+            if (!result.IsSuccess)
             {
-                var roles = await _userManager.GetRolesAsync(user);
-                var role = roles.FirstOrDefault();
-
-                usersList.Add(new UserResponseDto
-                {
-                    Id = user.Id,
-                    UserName = user.UserName,
-                    Email = user.Email,
-                    Role = role
-                });
+                return BadRequest(new ApiErrorResponseDto { Errors = result.Errors });
             }
 
-            return Ok(usersList);
+            return Ok(result.Value);
         }
 
         [HttpDelete("users/{id}")]
-        public async Task<IActionResult> DeleteUser(string id)
+        public async Task<IActionResult> DeleteUser(int id)
         {
-            var currentUserId = _userManager.GetUserId(User);
+            var result = await _adminService.DeleteUserAsync(id);
 
-            if (currentUserId == id)
+            if (!result.IsSuccess)
             {
-                return Forbid("You can't delete your own account!");
-            }
-
-            var user = await _userManager.FindByIdAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            var result = await _userManager.DeleteAsync(user);
-            if (!result.Succeeded)
-            {
-                return BadRequest(new ApiErrorResponseDto
-                {
-                    Errors = result.Errors.Select(e => e.Description).ToList()
-                });
+                return BadRequest(new ApiErrorResponseDto { Errors = result.Errors });
             }
 
             return NoContent();
         }
 
         [HttpPost("users")]
-        public async Task<IActionResult> CreateUser(NewUserRequestDto newUserRequestDto)
+        public async Task<IActionResult> CreateUser(NewUserRequestDto dto)
         {
-            var user = new User
-            {
-                UserName = newUserRequestDto.UserName,
-                Email = newUserRequestDto.Email,
-            };
+            var result = await _adminService.CreateUserAsync(dto);
 
-            var result = await _userManager.CreateAsync(user, newUserRequestDto.Password);
-            if (!result.Succeeded)
+            if (!result.IsSuccess)
             {
-                return BadRequest(new ApiErrorResponseDto
-                {
-                    Errors = result.Errors.Select(e => e.Description).ToList()
-                });
+                return BadRequest(new ApiErrorResponseDto { Errors = result.Errors });
             }
-
-            const string role = UserRole.User;
-            await _userManager.AddToRoleAsync(user, role);
 
             return Ok();
         }
@@ -107,75 +67,25 @@ namespace AngularWebApp.Server.Controllers
         [HttpGet("users/{id}")]
         public async Task<IActionResult> GetUserById(int id)
         {
-            var user = await _userManager.FindByIdAsync(id.ToString());
-            if (user == null)
+            var result = await _adminService.GetUserByIdAsync(id);
+
+            if (!result.IsSuccess)
             {
-                return NotFound();
+                return NotFound(new ApiErrorResponseDto { Errors = result.Errors });
             }
 
-            var roles = await _userManager.GetRolesAsync(user);
-            var role = roles.FirstOrDefault();
-
-            return Ok(new UserResponseDto
-            {
-                Id = user.Id,
-                UserName = user.UserName,
-                Email = user.Email,
-                Role = role
-            });
+            return Ok(result.Value);
         }
 
         [HttpPut("users/{id}")]
-        public async Task<IActionResult> UpdateUser(int id, UpdateUserRequestDto updateUserRequestDto)
+        public async Task<IActionResult> UpdateUser(int id, UpdateUserRequestDto dto)
         {
-            var user = await _userManager.FindByIdAsync(id.ToString());
-            if (user == null)
+            var result = await _adminService.UpdateUserAsync(id, dto);
+
+            if (!result.IsSuccess)
             {
-                return NotFound();
+                return BadRequest(new ApiErrorResponseDto { Errors = result.Errors });
             }
-
-            var existingUserByUserName = await _userManager.FindByNameAsync(updateUserRequestDto.UserName);
-            if (existingUserByUserName != null && existingUserByUserName.Id != user.Id)
-            {
-                return BadRequest(new ApiErrorResponseDto
-                {
-                    Errors = { $"Username '{existingUserByUserName.UserName}' is already taken." }
-                });
-            }
-
-            var existingUserByEmail = await _userManager.FindByEmailAsync(updateUserRequestDto.Email);
-            if (existingUserByEmail != null && existingUserByEmail.Id != user.Id)
-            {
-                return BadRequest(new ApiErrorResponseDto
-                {
-                    Errors = { $"Email '{existingUserByEmail.Email}' already used." }
-                });
-            }
-
-            await _userManager.SetUserNameAsync(user, updateUserRequestDto.UserName);
-            await _userManager.SetEmailAsync(user, updateUserRequestDto.Email);
-
-            if (!string.IsNullOrEmpty(updateUserRequestDto.Password))
-            {
-                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var result = await _userManager.ResetPasswordAsync(user, token, updateUserRequestDto.Password);
-                if (!result.Succeeded)
-                {
-                    return BadRequest(new ApiErrorResponseDto
-                    {
-                        Errors = result.Errors.Select(e => e.Description).ToList()
-                    });
-                }
-            }
-
-            var roles = await _userManager.GetRolesAsync(user);
-            await _userManager.RemoveFromRolesAsync(user, roles);
-
-            var newRole = updateUserRequestDto.Role;
-            await _userManager.AddToRoleAsync(user, newRole);
-
-            await _userManager.UpdateAsync(user);
-            await _signInManager.RefreshSignInAsync(user);
 
             return Ok();
         }
