@@ -17,6 +17,13 @@ builder.Services.AddDbContext<AngularWebAppDbContext>(options =>
 builder.Services.AddScoped<IEmailSender, SmtpEmailService>();
 
 builder.Services.AddScoped<IGenericDataService<User>, GenericDataService<User>>();
+
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+
+builder.Services.AddScoped<IAdminService, AdminService>();
 // Add services to the container.
 
 builder.Services.AddControllers();
