@@ -16,12 +16,14 @@ namespace AngularWebApp.Server.Services.Implementations
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IEmailSender _emailSender;
+        private readonly IEmailService _emailService;
 
-        public AuthService(UserManager<User> userManager, SignInManager<User> signInManager, IEmailSender emailSender)
+        public AuthService(UserManager<User> userManager, SignInManager<User> signInManager, IEmailSender emailSender, IEmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _emailService = emailService;
         }
 
         public async Task<Result<LoginResponseDto>> LoginAsync(LoginRequestDto loginRequestDto)
@@ -76,17 +78,7 @@ namespace AngularWebApp.Server.Services.Implementations
             const string role = UserRole.User;
             await _userManager.AddToRoleAsync(user, role);
 
-            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var encodedToken = Uri.EscapeDataString(token);
-
-            // To change
-            var confirmationLink =
-            $"https://localhost:65488/account/confirm-email?userId={user.Id}&token={encodedToken}";
-
-            await _emailSender.SendEmailAsync(
-                user.Email,
-                "Confirm email",
-                $"Click on the link: <a href='{confirmationLink}'>Confirm</a>");
+            await _emailService.SendConfirmationEmail(user);
 
             return Result.Success();
         }

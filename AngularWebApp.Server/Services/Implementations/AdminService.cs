@@ -14,12 +14,14 @@ namespace AngularWebApp.Server.Services.Implementations
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ICurrentUserService _currentUser;
-
-        public AdminService(UserManager<User> userManager, SignInManager<User> signInManager, ICurrentUserService currentUser)
+        private readonly IEmailService _emailService;
+        
+        public AdminService(UserManager<User> userManager, SignInManager<User> signInManager, ICurrentUserService currentUser, IEmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _currentUser = currentUser;
+            _emailService = emailService;
         }
 
         public async Task<Result<List<UserResponseDto>>> GetAllUsersAsync()
@@ -87,6 +89,8 @@ namespace AngularWebApp.Server.Services.Implementations
 
             await _userManager.AddToRoleAsync(user, UserRole.User);
 
+            await _emailService.SendConfirmationEmail(user);
+
             return Result.Success();
         }
 
@@ -114,7 +118,14 @@ namespace AngularWebApp.Server.Services.Implementations
             }
 
             await _userManager.SetUserNameAsync(user, dto.UserName);
-            await _userManager.SetEmailAsync(user, dto.Email);
+
+            if (user.Email != dto.Email)
+            {
+                user.EmailConfirmed = false;
+
+                await _userManager.SetEmailAsync(user, dto.Email);
+                await _emailService.SendConfirmationEmail(user);
+            }
 
             if (!string.IsNullOrEmpty(dto.Password))
             {

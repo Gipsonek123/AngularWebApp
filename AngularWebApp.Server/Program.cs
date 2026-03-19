@@ -24,6 +24,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 builder.Services.AddScoped<IAdminService, AdminService>();
+
+builder.Services.AddScoped<IEmailService, EmailService>();
 // Add services to the container.
 
 builder.Services.AddControllers();
